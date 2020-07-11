@@ -1,8 +1,7 @@
 import { LightningElement, wire, api } from 'lwc';
 import getSimilarBoats from '@salesforce/apex/BoatDataService.getSimilarBoats';
 import { NavigationMixin } from 'lightning/navigation';
-// imports
-// import getSimilarBoats
+
 export default class SimilarBoats extends NavigationMixin(LightningElement) {
     // Private
     currentBoat;
@@ -13,12 +12,9 @@ export default class SimilarBoats extends NavigationMixin(LightningElement) {
     // public
     @api
     get recordId() {
-        // returns the boatId
         return this.boatId;
     }
     set recordId(value) {
-        // sets the boatId value
-        // sets the boatId attribute
         this.setAttribute('boatId', value);
         this.boatId = value;
     }

@@ -28,11 +28,9 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
     wireRecord({ error, data }) {
         // Error handling
         if (data) {
-            console.log('from getRecord boat details:::', data);
             this.wiredRecord = data;
             this.error = undefined;
         } else if (error) {
-            console.error('from getRecord boat details:::', error);
             this.error = error;
             this.wiredRecord = undefined;
         }
@@ -49,7 +47,6 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
 
     // Utilize getFieldValue to extract the boat name from the record wire
     get boatName() {
-        console.log('getting boat name...');
         return getFieldValue(this.wiredRecord, BOAT_NAME_FIELD);
     }
 
@@ -76,13 +73,10 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
 
     handleMessage(message) {
         this.boatId = message.recordId;
-        console.log('recrodId from MC in boat details:::', this.boatId);
     }
 
     // Navigates to record page
     navigateToRecordViewPage() {
-        console.log('button clicked in boat details');
-        // console.log('clicked New Boat');
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
@@ -95,8 +89,6 @@ export default class BoatDetailTabs extends NavigationMixin(LightningElement) {
 
     // Navigates back to the review list, and refreshes reviews component
     handleReviewCreated(event) {
-        // must select reviews tab and mark it active
-        console.log('inside review created...');
         this.template.querySelector('lightning-tabset').activeTabValue = 'reviews';
         this.template.querySelector('c-boat-reviews').refresh();
     }

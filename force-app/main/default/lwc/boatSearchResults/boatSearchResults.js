@@ -31,7 +31,6 @@ export default class BoatSearchResults extends LightningElement {
             this.boats = data;
             this.error = undefined;
         } else if (error) {
-            console.error('In boatSearchResults:::', error);
             this.error = error;
             this.boats = undefined;
         }
@@ -105,10 +104,6 @@ export default class BoatSearchResults extends LightningElement {
                     })
                 );
             })
-            .finally(() => {
-                console.log('In finally...');
-                this.refresh();
-            });
     }
     // Check the current value of isLoading before dispatching the doneloading or loading custom event
     notifyLoading(isLoading) {

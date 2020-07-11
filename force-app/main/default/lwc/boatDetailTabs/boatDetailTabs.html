@@ -6,7 +6,7 @@
         </lightning-card>
     </template>
     <template if:true={wiredRecord}>
-        <!-- lightning card for the content when wiredRecord has data goes here  -->
+        <!-- lightning tabset for the content when wiredRecord has data goes here  -->
         <lightning-tabset variant="scoped">
             <lightning-tab label={label.labelDetails}>
                 <lightning-card title={boatName} icon-name={detailsTabIconName}>
@@ -22,13 +22,12 @@
             </lightning-tab>
             <lightning-tab label={label.labelReviews} value="reviews">
                 <!-- Boat Reviews Component Goes Here -->
-                <!-- Pass boatId -->
                 <c-boat-reviews record-id={boatId}></c-boat-reviews>
             </lightning-tab>
             <lightning-tab label={label.labelAddReview}>
                 <!-- Boat Add Review Form Component Goes Here -->
-                <!-- Pass boatId -->
-                <c-boat-add-review-form record-id={boatId} oncreatereview={handleReviewCreated}></c-boat-add-review-form>
+                <c-boat-add-review-form record-id={boatId} oncreatereview={handleReviewCreated}>
+                </c-boat-add-review-form>
             </lightning-tab>
         </lightning-tabset>
     </template>

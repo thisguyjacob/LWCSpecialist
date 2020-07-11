@@ -2,14 +2,12 @@ import { LightningElement, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllReviews from '@salesforce/apex/BoatDataService.getAllReviews';
 
-// imports
 export default class BoatReviews extends NavigationMixin(LightningElement) {
     // Private
     boatId;
     error;
     boatReviews;
     isLoading;
-    // availableReviews;
 
     // Getter and Setter to allow for logic to run on recordId change
     @api
@@ -48,14 +46,11 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
         getAllReviews({ boatId: this.boatId })
             .then((result) => {
                 this.boatReviews = result;
-                // this.availableReviews = this.boatReviews.length > 0;
-                console.log('Reviews List:::', this.boatReviews);
                 this.error = undefined;
                 this.isLoading = false;
             })
             .catch((error) => {
                 this.error = error;
-                // this.availableReviews = false;
                 this.contacts = undefined;
                 this.isLoading = false;
             });
@@ -63,14 +58,10 @@ export default class BoatReviews extends NavigationMixin(LightningElement) {
 
     // Helper method to use NavigationMixin to navigate to a given record on click
     navigateToRecord(event) {
-        console.log('navigating to record:::', event.target);
-        // let recordId = event.target.getAttribute('data-record-id');
-        let recordId = event.target.dataset.recordId;
-        // console.log(event.target.getAttribute('data-record-id'));
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
-                recordId: recordId,
+                recordId: event.target.dataset.recordId,
                 objectApiName: 'User',
                 actionName: 'view'
             }

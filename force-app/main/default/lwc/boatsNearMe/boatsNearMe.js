@@ -37,7 +37,6 @@ export default class BoatsNearMe extends LightningElement {
     // Controls the isRendered property
     // Calls getLocationFromBrowser()
     renderedCallback() {
-        console.log('in rendered callback...');
         if (!this.isRendered) {
             this.getLocationFromBrowser();
         }
