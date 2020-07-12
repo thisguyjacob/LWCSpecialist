@@ -1,7 +1,7 @@
 public with sharing class BoatDataServiceFromPackage {
-    public static final String LENGTH_TYPE = 'Length'; 
-    public static final String PRICE_TYPE = 'Price'; 
-    public static final String TYPE_TYPE = 'Type'; 
+    public static final String LENGTH_TYPE = 'Length';
+    public static final String PRICE_TYPE = 'Price';
+    public static final String TYPE_TYPE = 'Type';
 
     public static List<Boat__c> getBoats(String boatTypeId) {
         // Without an explicit boatTypeId, the full list is desired
@@ -21,7 +21,7 @@ public with sharing class BoatDataServiceFromPackage {
         List<Boat__c> similarBoats = new List<Boat__c>();
         List<Boat__c> parentBoat = [SELECT Id, Length__c, Price__c, BoatType__c, BoatType__r.Name
                                     FROM Boat__c
-                                    WHERE Id = :boatId 
+                                    WHERE Id = :boatId
                                     WITH SECURITY_ENFORCED];
         if (parentBoat.isEmpty()) {
             return similarBoats;
@@ -95,5 +95,5 @@ public with sharing class BoatDataServiceFromPackage {
         query += ' WITH SECURITY_ENFORCED ORDER BY DISTANCE(Geolocation__c, GEOLOCATION(:latitude, :longitude), \'mi\') LIMIT 10';
         return JSON.serialize(Database.query(query));
     }
-    
+
 }
