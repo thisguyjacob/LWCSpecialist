@@ -2,8 +2,6 @@ import { LightningElement, api, wire } from 'lwc';
 import { subscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
 import BOATMC from '@salesforce/messageChannel/BoatMessageChannel__c';
 import { getRecord } from 'lightning/uiRecordApi';
-import { refreshApex } from '@salesforce/apex';
-import getBoatLocation from '@salesforce/apex/BoatDataService.getBoatLocation';
 const LONGITUDE_FIELD = 'Boat__c.Geolocation__Longitude__s';
 const LATITUDE_FIELD = 'Boat__c.Geolocation__Latitude__s';
 const BOAT_FIELDS = [LONGITUDE_FIELD, LATITUDE_FIELD];
@@ -23,7 +21,6 @@ export default class BoatMap extends LightningElement {
     set recordId(value) {
         this.setAttribute('boatId', value);
         this.boatId = value;
-        // return refreshApex(this.boatRecord);
     }
 
     //public
@@ -69,15 +66,12 @@ export default class BoatMap extends LightningElement {
     }
 
     handleMessage(message) {
-        // this.boatId = message.recordId;
         this.recordId = message.recordId;
-        this.getBoatLocation();
-        // return refreshApex(this.boatRecord);
+
     }
 
     // Creates the map markers array with the current boat's location for the map.
     updateMap(longitude, latitude) {
-        // this.mapMarkers = [longitude, latitude];
         this.mapMarkers = [{
             location: {
                 Latitude: latitude,
@@ -89,20 +83,5 @@ export default class BoatMap extends LightningElement {
     // Getter method for displaying the map component, or a helper method.
     get showMap() {
         return this.mapMarkers.length > 0;
-    }
-
-    getBoatLocation() {
-        getBoatLocation({ boatId: this.boatId })
-            .then((result) => {
-                this.boatRecord = result;
-                this.error = undefined;
-                const longitude = result.Geolocation__Longitude__s;
-                const latitude = result.Geolocation__Latitude__s;
-                this.updateMap(longitude, latitude);
-            })
-            .catch((error) => {
-                this.error = error;
-                this.boatRecord = undefined;
-            });
     }
 }

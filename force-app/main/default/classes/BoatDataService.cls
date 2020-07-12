@@ -6,33 +6,55 @@ public with sharing class BoatDataService {
 
     @AuraEnabled(cacheable = true)
     public static List<BoatType__c> getBoatTypes(){
-        return [Select Id, Name From BoatType__c];
+        return [SELECT Name, Id FROM BoatType__c WITH SECURITY_ENFORCED ORDER BY Name];
     }
 
     @AuraEnabled(cacheable = true)
     public static List<Boat__c> getBoats(String boatTypeId){
-        if (boatTypeId != null && boatTypeId != '') {
-            return [Select Id, Name, Picture__c, Contact__r.Name, Price__c, Length__c, BoatType__r.Name, Description__c  From Boat__c Where BoatType__c = :boatTypeId];
+        String query = 'SELECT '
+                        + 'Name, Description__c, Geolocation__Latitude__s, '
+                        + 'Geolocation__Longitude__s, Picture__c, Contact__r.Name, '
+                        + 'BoatType__c, BoatType__r.Name, Length__c, Price__c '
+                        + 'FROM Boat__c';
+        if (String.isNotBlank(boatTypeId)) {
+            query += ' WHERE BoatType__c = :boatTypeId';
         }
-        return [Select Id, Name, Picture__c, Contact__r.Name, Price__c, Length__c, BoatType__r.Name, Description__c From Boat__c];
+        query += ' WITH SECURITY_ENFORCED ';
+        return Database.query(query);
     }
 
 
     @AuraEnabled(cacheable = true)
     public static String getBoatsByLocation(Decimal latitude, Decimal longitude, String boatTypeId){
-        String queryString = 'SELECT Id, Name, Geolocation__Latitude__s, Geolocation__Longitude__s FROM Boat__c ';
-        if (boatTypeId != null && boatTypeId != '') {
-            queryString += 'WHERE BoatType__c = \''+boatTypeId+'\' ';
+        String query = 'SELECT Name, Geolocation__Latitude__s, Geolocation__Longitude__s FROM Boat__c ';
+        if (String.isNotBlank(boatTypeId)) {
+            query += 'WHERE BoatType__c = :boatTypeId ';
         }
-        queryString += 'ORDER BY DISTANCE(Geolocation__c, GEOLOCATION('+String.valueOf(latitude)+','+String.valueOf(longitude)+'), \'mi\') ';
-        queryString += 'LIMIT 10';
-        List<Boat__c> boats = Database.query(queryString);
-        return JSON.serialize(boats);
+        query += ' WITH SECURITY_ENFORCED ORDER BY DISTANCE(Geolocation__c, GEOLOCATION(:latitude, :longitude), \'mi\') LIMIT 10';
+        return JSON.serialize(Database.query(query));
     }
 
     @AuraEnabled
     public static List<BoatReview__c> getAllReviews(Id boatId){
-        return [Select Id, Name, CreatedDate, CreatedBy.Id, CreatedBy.Name, CreatedBy.CompanyName, CreatedBy.SmallPhotoUrl, Comment__c, Rating__c, Boat__c From BoatReview__c Where Boat__c = :boatId Order By CreatedDate desc];
+        return [
+            SELECT
+                Id,
+                Name,
+                Comment__c,
+                Rating__c,
+                LastModifiedDate,
+                CreatedDate,
+                CreatedBy.Name,
+                CreatedBy.SmallPhotoUrl,
+                CreatedBy.CompanyName
+            FROM
+                BoatReview__c
+            WHERE
+                Boat__c =:boatId
+            WITH SECURITY_ENFORCED
+            ORDER BY
+                CreatedDate DESC
+        ];
     }
 
     @AuraEnabled(cacheable = true)
@@ -76,10 +98,5 @@ public with sharing class BoatDataService {
             ];
         }
         return similarBoats;
-    }
-
-    @AuraEnabled (cacheable = true)
-    public static Boat__c getBoatLocation(Id boatId){
-        return [Select Geolocation__Longitude__s, Geolocation__Latitude__s From Boat__c Where Id = :boatId];
     }
 }
