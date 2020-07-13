@@ -20,19 +20,20 @@ export default class BoatSearchResults extends LightningElement {
     boats;
     isLoading = false;
     @track draftValues = [];
+    wiredResult;
 
     // wired message context
     @wire(MessageContext)
     messageContext;
 
     @wire(getBoats, { boatTypeId: '$boatTypeId' })
-    wiredBoats({ error, data }) {
+    wiredBoats(result) {
+        this.wiredResult = result;
+        const { data, error } = result;
         if (data) {
             this.boats = data;
-            this.error = undefined;
         } else if (error) {
             this.error = error;
-            this.boats = undefined;
         }
     }
 
@@ -52,7 +53,7 @@ export default class BoatSearchResults extends LightningElement {
         // invoke refreshApex to refresh a wired property
         this.isLoading = true;
         this.notifyLoading(this.isLoading);
-        refreshApex(this.boats);
+        await refreshApex(this.wiredResult);
         this.isLoading = false;
         this.notifyLoading(this.isLoading);
     }
@@ -80,7 +81,7 @@ export default class BoatSearchResults extends LightningElement {
         });
 
         const promises = recordInputs.map(recordInput => {
-            updateRecord(recordInput);
+            return updateRecord(recordInput);
         });
 
         Promise.all(promises)
