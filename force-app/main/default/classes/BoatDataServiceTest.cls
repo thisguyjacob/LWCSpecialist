@@ -11,7 +11,7 @@ public with sharing class BoatDataServiceTest {
     static void testGetBoatsWithBoatId(){
         List<BoatType__c> boatTypes = BoatDataService.getBoatTypes();
         System.assertEquals(false, boatTypes.isEmpty(),'The there are no Boat Type records.');
-    
+
         String boatTypeId = boatTypes.get(0).Id;
         List<Boat__c> boatsToTest = BoatDataService.getBoats(boatTypeId);
         List<Boat__c> boatsWithIdExpected = [SELECT Id FROM Boat__c WHERE BoatType__c = :boatTypeId];
@@ -60,11 +60,11 @@ public with sharing class BoatDataServiceTest {
     static void testGetSimilarBoatsByType(){
         List<BoatType__c> boatTypes = BoatDataService.getBoatTypes();
         System.assertEquals(false, boatTypes.isEmpty(),'The there are no Boat Type records.');
-    
+
         String boatTypeId = boatTypes.get(0).Id;
         List<Boat__c> boatsWithTypeId = BoatDataService.getBoats(boatTypeId);
         System.assertEquals(false, boatsWithTypeId.isEmpty(), 'There are no botes with specified boat Id');
-        
+
         List<Boat__c> boatsByTYPE =  BoatDataService.getSimilarBoats(boatsWithTypeId.get(0).Id,  BoatDataService.TYPE_TYPE);
         System.assertEquals(boatsWithTypeId.size() - 1, boatsByTYPE.size(), 'The similar boats by type query did not return the right amount.');
 
