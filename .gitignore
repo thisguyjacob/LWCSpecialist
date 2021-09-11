@@ -42,3 +42,7 @@ scripts/
 config/
 sfdx-project.json
 
+# vscode extensions and other items
+scratchpads/
+
+
