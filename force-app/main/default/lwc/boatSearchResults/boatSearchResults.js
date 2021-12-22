@@ -75,11 +75,14 @@ export default class BoatSearchResults extends LightningElement {
     // clear lightning-datatable draft values
     handleSave(event) {
         this.draftValues = event.detail.draftValues;
+        console.log('draft values:::', this.draftValues);
+        console.log('draft values:::', this.draftValues.slice());
         const recordInputs = event.detail.draftValues.slice().map(draft => {
             const fields = Object.assign({}, draft);
+            console.log('draft values fields:::', fields);
             return { fields };
         });
-
+        console.log('record inputs:::', recordInputs);
         const promises = recordInputs.map(recordInput => {
             return updateRecord(recordInput);
         });
