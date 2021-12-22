@@ -36,7 +36,6 @@ ehthumbs.db
 $RECYCLE.BIN/
 
 # configurations and other files
-manifest/
 scripts/
 .vscode/
 config/
