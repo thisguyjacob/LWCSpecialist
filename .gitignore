@@ -36,11 +36,10 @@ ehthumbs.db
 $RECYCLE.BIN/
 
 # configurations and other files
-*/package.xml
+manifest/
 scripts/
 .vscode/
 config/
-sfdx-project.json
 
 # vscode extensions and other items
 scratchpads/
